@@ -1,0 +1,66 @@
+<h4>ES6</h4>
+<strong>ES6Cake:</strong><div id="bakedcake"></div>
+<br />
+<strong>Cake Header:</strong>
+<div id="cakeheader"></div>
+<br />
+<strong>Cake Content</strong>
+<div id="cakecontent"></div>
+
+<button id="btn_unbake" name="btn_unbake" onClick="unbakethedamncake();" class="btn btn-danger" type="button">Unbake the cake</button>
+<script>
+let bakedcakestring_header = ""; // Create blank string for header
+let bakedcakestring_content = ""; // Create blank string for content
+let bakedcakestring = ""; // Create blank string for combined string
+    
+var bakethedamncake = (arraytouse)=> {
+    arraytouse.forEach(({length}) => { // Record array item string lengths & place in header
+		bakedcakestring_header = `${bakedcakestring_header + length},`;
+	})
+	bakedcakestring_header = bakedcakestring_header.slice(0, -1); // Pull out the last comma
+	bakedcakestring_content = arraytouse.join(""); // Join all array items into one string, use nothing as delimiter
+	bakedcakestring = `${bakedcakestring_header}_${bakedcakestring_content}`; // Combine all three into 1 string
+	document.getElementById("bakedcake").innerHTML = bakedcakestring; // Display string
+	DisplayCakeParts(bakedcakestring);
+}    
+
+var DisplayCakeParts = (stringtosplit)=> { // Function to show you can show both the header & footer without mutating the original string.
+	let cakearray = []; // Instantiate array
+	cakearray = stringtosplit.split((/_(.+)/)); // Regular expression which breaks the string into two parts at the first instance found of the underscore character and puts each piece into an array.
+	document.getElementById("cakeheader").innerHTML = cakearray[0]; // Set header text to position 0 of array (header)
+	document.getElementById("cakecontent").innerHTML = cakearray[1]; // Set header text to position 1 of array (content)
+}
+bakethedamncake(currentarraycontents); // run the function
+    
+var unbakethedamncake = ()=> {
+	let cakearray = []; // Instantiate array
+	let backtoarray = [];
+	stringtosplit = bakedcakestring;
+	cakearray = stringtosplit.split((/_(.+)/)); // Regular expression which breaks the string into two parts at the first instance found of the underscore character
+	cakeheader = cakearray[0];
+	cakecontent = cakearray[1];
+	cakeheadercountarray = cakeheader.split(",");
+	i=0;
+	let tempstart = 0;
+	let tempend = 0;
+	while(i<cakeheadercountarray.length){
+		tempend = tempstart + parseInt(cakeheadercountarray[i]);
+		tempforarray = cakecontent.substring(tempstart,tempend)
+		backtoarray.push(tempforarray);
+		tempstart = parseInt(tempend);
+		i++;
+	}
+	const buildcontentstempstart = "<span class='btn-warning pad10'>";
+	const buildcontentstempend = "</span>&nbsp;";
+	let displayindiv = "";
+	j=0;
+	while(j<backtoarray.length){
+		document.getElementById("viewport-bottom").innerHTML = "";
+		builddivs = "";
+		builddivs = buildcontentstempstart + backtoarray[j] + buildcontentstempend;
+		displayindiv = displayindiv + builddivs;
+		j++
+	}
+	document.getElementById("viewport-bottom").innerHTML = displayindiv;
+}
+</script>

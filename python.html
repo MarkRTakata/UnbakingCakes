@@ -1,0 +1,36 @@
+--https://repl.it/languages/python3
+
+values_string = input("Enter your string: ")
+
+values_array = values_string.split()
+
+values_lengths = "";
+
+for strval in values_array:
+    values_lengths += str(len(strval.replace("|", ""))) + ","
+
+values_lengths = values_lengths[:-1]
+
+print("Here are the values so far: " + str(values_array) + " lengths: " + values_lengths)
+
+s = ""
+
+values_concat = s.join(values_array).replace("|", "") + "|" + str(values_lengths)
+
+print("Output 1st function: " + values_concat)
+
+secfunc_array = values_concat.split("|")
+
+secfunc_values = secfunc_array[0]
+
+secfunc_lengths = secfunc_array[1].split(",")
+
+output_secfunc = []
+
+curr_pos = 0
+
+for len_str in secfunc_lengths:
+    output_secfunc.append(secfunc_values[curr_pos:int(len_str) + curr_pos])
+    curr_pos += int(len_str)
+
+print("Output 2nd function: " + str(output_secfunc))

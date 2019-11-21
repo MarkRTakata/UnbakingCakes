@@ -1,0 +1,62 @@
+<body>
+<h4>Jquery JS</h4>
+<strong>JQake:</strong><div id="bakedcake"></div>
+<br />
+<strong>Cake Header:</strong>
+<div id="cakeheader"></div>
+<br />
+<strong>Cake Content</strong>
+<div id="cakecontent"></div>
+
+<button id="btn_unbake" name="btn_unbake" onClick="unbakethedamncake();" class="btn btn-danger" type="button">Unbake the cake</button>
+<script>
+	var bakedcakestring_header = ""; // Create blank string for header
+	var bakedcakestring_content = ""; // Create blank string for content
+	var bakedcakestring = ""; // Create blank string for combined string
+	function bakethedamncake(arraytouse){ // Create function that takes in an array
+        var tempcakeheader = [];
+        $.each(arraytouse,function(index, item){
+            tempcakeheader.push(item.length);
+		})
+        bakedcakestring_header = tempcakeheader.join(","); // Join tempheader array into list
+		bakedcakestring_content = arraytouse.join(""); // Join all array items into one string, use nothing as delimiter
+		bakedcakestring = bakedcakestring_header + "_" + bakedcakestring_content; // Combine all three into 1 string
+		$("#bakedcake").html(bakedcakestring); // Display string
+		DisplayCakeParts(bakedcakestring);
+	}
+	function DisplayCakeParts(stringtosplit){ // Function to show you can show both the header & footer without mutating the original string.
+		var cakearray = []; // Instantiate array
+		cakearray = stringtosplit.split((/_(.+)/)); // Regular expression which breaks the string into two parts at the first instance found of the underscore character and puts each piece into an array.
+		$("#cakeheader").html(cakearray[0]); // Set header text to position 0 of array (header)
+		$("#cakecontent").html(cakearray[1]); // Set header text to position 1 of array (content)
+	}
+	bakethedamncake(currentarraycontents); // run the function
+	function unbakethedamncake(){
+		var cakearray = []; // Instantiate array
+        var backtoarray = [];
+		stringtosplit = bakedcakestring;
+		cakearray = stringtosplit.split((/_(.+)/)); // Regular expression which breaks the string into two parts at the first instance found of the underscore character
+		cakeheader = cakearray[0];
+		cakecontent = cakearray[1];
+		cakeheadercountarray = cakeheader.split(",");
+        var tempstart = 0;
+        var tempend = 0;
+        $.each(cakeheadercountarray, function(index, item){
+            tempend = tempstart + parseInt(cakeheadercountarray[index]);
+            tempforarray = cakecontent.substring(tempstart,tempend)
+            backtoarray.push(tempforarray);
+			tempstart = parseInt(tempend);
+        })
+		var buildcontentstempstart = "<span class='btn-warning pad10'>";
+		var buildcontentstempend = "</span>&nbsp;";
+		var displayindiv = "";
+        $.each(backtoarray,function(index, item){
+            $("#viewport-bottom").html("");
+            builddivs = "";
+            builddivs = buildcontentstempstart + backtoarray[index] + buildcontentstempend;
+            displayindiv = displayindiv + builddivs;
+        })
+		$("#viewport-bottom").html(displayindiv);
+	}
+</script>
+</body>

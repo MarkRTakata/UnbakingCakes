@@ -1,0 +1,18 @@
+<script>
+function unbakethedamncake(stringtosplit){
+	var cakearray = []; // Instantiate array
+	cakearray = stringtosplit.split((/_(.+)/)); // Regular expression which breaks the string into two parts at the first instance found of the underscore character and puts each piece into an array.
+	
+	//cakeheader = cakearray[0];
+	//cakecontent = cakearray[1];
+	
+	//console.log(cakeheader);
+	//console.log(cakecontent);
+	
+	//document.getElementById("cakeheader").innerHTML = cakearray[0]; // Set header text to position 0 of array (header)
+	//document.getElementById("cakecontent").innerHTML = cakearray[1]; // Set header text to position 1 of array (content)
+}
+	$("#btn_unbake").click(function(){
+		unbakethedamncake(bakedcakestring);
+	})
+</script>

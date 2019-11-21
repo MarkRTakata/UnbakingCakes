@@ -1,0 +1,138 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Unbaking Cakes</title>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.2/jquery.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/intercooler-js/1.2.2/intercooler.js"></script>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+	<script src="https://use.fontawesome.com/740e74b566.js"></script>
+	<style>
+		body {
+			padding: 0px;
+		}
+		.pad10 {
+			padding:10px;
+		}
+		#viewport-main{
+			display: flex;
+			flex-direction: column;
+			position: relative;
+			align-content: stretch;
+		}
+		#viewport-nav {
+			width: 100%;
+			background-color:#ccc;
+			height: 50px;
+			padding: 5px;
+			border-bottom: solid 1px black;
+		}
+		#viewport-top {
+			width: 100%;
+			background-color: mintcream;
+			height: calc((100vh / 3)-50px);
+			padding: 30px;
+			border-bottom: solid 1px black;
+			overflow: scroll;
+		}
+		#viewport-middle {
+			width: 100%;
+			background-color:aquamarine;
+			height: 33%;
+			height: calc(100vh / 3);
+			padding: 30px;
+			border-bottom: solid 1px black;
+			overflow: scroll;
+		}
+		#viewport-bottom {
+			width: 100%;
+			background-color:burlywood;
+			height: 33%;
+			height: calc(100vh / 3);
+			padding: 30px;
+			overflow: scroll;
+		}
+	</style>
+</head>
+<body><form>
+<div id="viewport-main">
+	<div id="viewport-top">
+		<h1><i class="fa fa-birthday-cake"></i> Unbaking cakes</h1>
+			<label>Add item to array</label> <input type="text" name="txt_addtoarray" id="txt_addtoarray" value="" /> 
+			<button type="button" id="btn_additemtoarray" class="btn btn-success">ADD</button>
+		<hr />
+		<h3>Current array contents:</h3>
+		<div id="div_currentarraycontents"></div>
+	</div>
+	<div id="viewport-nav" class="hidden">
+        <input type="hidden" name="input_arrayvals" id="input_arrayvals" value="" />
+		<ul class="nav nav-pills">
+			<li role="navigation"><h4>Bake the cake in:</h4> </li>
+            <li role="navigation"><button class="btn btn-primary" type="button" ic-get-from="vanillajs.html" ic-target="#viewport-middle">Vanilla JS</button></li>
+            <li role="navigation"><button class="btn btn-primary" type="button" ic-get-from="es6.html" ic-target="#viewport-middle">ES6</button></li>
+            <li role="navigation"><button class="btn btn-primary" type="button" ic-get-from="jquery.html" ic-target="#viewport-middle">JQuery</button></li>
+			<li role="navigation">
+                <button type="button" class="btn btn-primary" id="btn_cfmtags" name="btn_cfmtags" ic-post-to="cf.cfm" ic-target="#viewport-middle">Coldfusion (tags)</button></li>
+			<li role="navigation"><button type="button" class="btn btn-primary" id="btn_cfmscript" name="btn_cfmscript" ic-post-to="cfscript.cfm" ic-target="#viewport-middle">Coldfusion (script)</button></li>
+			<li role="navigation"><button type="button" class="btn btn-primary" id="btn_phptags" name="btn_phptags" ic-post-to="php.php" ic-target="#viewport-middle">PHP</button></li>
+		</ul>
+	</div>
+	<div id="viewport-middle">
+		(No code processing page loaded)
+	</div>
+	<div id="viewport-bottom">
+		(No code processing page loaded)
+	</div>
+</div>
+    
+<script>
+	var currentarraycontents = [];
+	function additemtoarray(arrayname,arraycontents){
+		this[arrayname].push(arraycontents);
+		updateDiv("div_currentarraycontents", arrayname);
+		$("#viewport-nav").removeClass("hidden");
+	}
+	$('body').on('click', 'button.deletebtn', function() {
+		var arrayindextodelete = $(this).attr("id").substr(11);
+		currentarraycontents.splice(arrayindextodelete,1);
+    	updateDiv("div_currentarraycontents","currentarraycontents");
+		if(currentarraycontents.length == 0){
+			$("#viewport-nav").addClass("hidden");
+			$("#viewport-middle").html("");
+		}
+	});
+	
+	function updateDiv(divname, arrayname){
+		var buildcontents = $("#" + divname).val();
+		var buildcontentstempstart = "<span class='btn-warning pad10'>"
+		var buildcontentstempend = "</span>&nbsp;"
+		var displayindiv = "";
+		$.each(this[arrayname], function(index,item){
+			$("#div_currentarraycontents").html("");
+			builddivs = "";
+			builddivs = buildcontentstempstart + item + " <button class='btn deletebtn btn-xs btn-danger' type='button' id='btn_delete_" + index + "'>X</button>" + buildcontentstempend;
+			displayindiv = displayindiv + builddivs;
+		})
+		$("#div_currentarraycontents").html(displayindiv);
+        
+	}
+    $("#txt_addtoarray").keyup(function(){
+        $("#btn_additemtoarray").attr("disabled",true);
+        if($("#txt_addtoarray").val().indexOf(",") != -1){
+            temptxtvalue = $("#txt_addtoarray").val();
+            temptxtvalue = temptxtvalue.replace(/,/g, '');
+            $("#txt_addtoarray").val(temptxtvalue);
+       }
+        $("#btn_additemtoarray").attr("disabled",false);
+    })
+	$("#btn_additemtoarray").click(function(){
+		itemcontents = $("#txt_addtoarray").val();
+		additemtoarray("currentarraycontents",itemcontents);
+		$("#txt_addtoarray").val("");
+        $("#input_arrayvals").val(currentarraycontents);
+	})
+</script>
+    </form>
+</body>
+</html>
